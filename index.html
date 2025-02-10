@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says - González Villarroel</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+
+<body>
+    <div id="game-container">
+        <h1>Simon says</h1>
+        <div id="color-buttons">
+            <div class="color-button" id="red"></div>
+            <div class="color-button" id="green"></div>
+            <div class="color-button" id="blue"></div>
+            <div class="color-button" id="yellow"></div>
+        </div>
+        <button id="start-button">Iniciar Juego</button>
+        <div id="score">Puntuación: 0</div>
+        <div id="high-scores">
+            <h2>Mejores Puntajes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="game-over-message" style="display: none;">
+        <h2>¡Juego Terminado!</h2>
+        <p>Tu puntuación fue: <span id="final-score"></span></p>
+    </div>
+    <script src="script.js"></script>
+    
+</body>
+</html>
