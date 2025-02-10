@@ -1,0 +1,100 @@
+/* Estilos generales */
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+  }
+  
+  #game-container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Botones de colores */
+  #color-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 100px); /* Dos columnas */
+    grid-gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .color-button {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Forma circular */
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease; /* Transición suave */
+  }
+  
+  #red {
+    background-color: red;
+  }
+  
+  #green {
+    background-color: green;
+  }
+  
+  #blue {
+    background-color: blue;
+  }
+  
+  #yellow {
+    background-color: yellow;
+  }
+  
+  /* Efecto "brillo" al activarse */
+  .color-button.active {
+    transform: scale(1.1); /* Escala ligeramente */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Botón de inicio */
+  #start-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  /* Puntuación */
+  #score {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+  
+  /* Tabla de mejores puntajes */
+  #high-scores table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  #high-scores th,
+  #high-scores td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  /* Diseño responsivo */
+  @media (max-width: 500px) {
+    #color-buttons {
+      grid-template-columns: repeat(2, 80px); /* Dos columnas en pantallas pequeñas */
+    }
+  
+    .color-button {
+      width: 80px;
+      height: 80px;
+    }
+  }
