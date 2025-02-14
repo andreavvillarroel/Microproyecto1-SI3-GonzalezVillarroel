@@ -3,18 +3,23 @@ const colors = ["red", "green", "blue", "yellow"];
 let sequence = [];
 let playerSequence = [];
 let score = 0;
-let highScores = JSON.parse(localStorage.getItem("highScores")) || {}; // Obtener o inicializar highScores
+let highScores = JSON.parse(localStorage.getItem("highScores")) || {};
 
 const colorButtons = document.querySelectorAll(".color-button");
 const startButton = document.getElementById("start-button");
 const restartButton = document.getElementById("restart-scores");
 const scoreDisplay = document.getElementById("score");
 const highScoresTable = document.querySelector("#high-scores table tbody");
+const redSound = new Audio("sound.mp3");
+const greenSound = new Audio("sound.mp3");
+const blueSound = new Audio("sound.mp3");
+const yellowSound = new Audio("sound.mp3");
+let playerName; 
 
 // Funciones
 
 function disabledstartbutton() {
-  startButton.disabled = true; // Deshabilitar el botón de inicio durante el juego
+  startButton.disabled = true;
   startButton.style.backgroundColor = "red";
   for (const color of colors) {
     const colorButton = document.getElementById(color);
@@ -23,7 +28,7 @@ function disabledstartbutton() {
 }
 
 function enabledstartbutton() {
-  startButton.disabled = false; // Deshabilitar el botón de inicio durante el juego
+  startButton.disabled = false;
   startButton.style.backgroundColor = "#23c429";
   for (const color of colors) {
     const colorButton = document.getElementById(color);
@@ -33,12 +38,12 @@ function enabledstartbutton() {
 
 function startGame() {
   const gameOverMessage = document.getElementById("game-over-message");
-    gameOverMessage.style.display = "none";
+  gameOverMessage.style.display = "none";
   sequence = [];
   playerSequence = [];
   score = 0;
   scoreDisplay.textContent = "Puntuación: " + score;
-  disabledstartbutton(); // Deshabilitar el botón de inicio durante el juego
+  disabledstartbutton();
   generateSequence();
   showSequence();
 }
@@ -54,18 +59,51 @@ function showSequence() {
     const color = sequence[i];
     const button = document.getElementById(color);
     activateButton(button);
+    switch (color) {
+      case "red":
+        redSound.play();
+        break;
+      case "green":
+        greenSound.play();
+        break;
+      case "blue":
+        blueSound.play();
+        break;
+      case "yellow":
+        yellowSound.play();
+        break;
+    }
+
     i++;
     if (i >= sequence.length) {
       clearInterval(interval);
     }
-  }, 500); // Mostrar cada color durante 500ms
+  }, 500);
 }
 
 function activateButton(button) {
   button.classList.add("active");
   setTimeout(() => {
     button.classList.remove("active");
-  }, 300); // Desactivar la clase "active" después de 300ms
+  }, 300);
+  switch (button.id) {
+    case "red":
+        redSound.currentTime = 0;
+        redSound.play();
+        break;
+    case "green":
+        greenSound.currentTime = 0;
+        greenSound.play();
+        break;
+    case "blue":
+        blueSound.currentTime = 0;
+        blueSound.play();
+        break;
+    case "yellow":
+        yellowSound.currentTime = 0;
+        yellowSound.play();
+        break;
+}
 }
 
 function handlePlayerInput(event) {
@@ -88,28 +126,35 @@ function handlePlayerInput(event) {
 }
 
 function endGame() {
-    const gameOverMessage = document.getElementById("game-over-message");
-    gameOverMessage.style.display = "block"; // Mostrar el mensaje de Game Over
-    gameOverMessage.querySelector("#final-score").textContent = score; // Mostrar el puntaje final
-    gameOverMessage.style.display = "none";
-    updateHighScores(); // Llamar a updateHighScores después de que se oculta el mensaje
+  const gameOverMessage = document.getElementById("game-over-message");
+    gameOverMessage.style.display = "block";
 
-    enabledstartbutton(); // Habilitar el botón de inicio
-  
+    gameOverMessage.querySelector("#final-score").textContent = score;
+
+    // Verificar si el botón ya existe
+    let changePlayerButton = document.getElementById("change-player-button");
+
+    if (!changePlayerButton) { // Si no existe, se crea
+        changePlayerButton = document.createElement("button");
+        changePlayerButton.id = "change-player-button"; // Asignar ID al botón
+        changePlayerButton.textContent = "Cambiar de Jugador";
+        changePlayerButton.addEventListener("click", handlePlayerChange);
+        gameOverMessage.appendChild(changePlayerButton);
+    } // Si ya existe, no se hace nada
+
+    updateHighScores();
+    enabledstartbutton();
 }
 
 function updateHighScores() {
-  const playerName = prompt("Ingresa tu nombre:");
-  if (playerName) {
-    highScores[playerName] = score;
-    localStorage.setItem("highScores", JSON.stringify(highScores));
-    renderHighScores();
-  }
+  highScores[playerName] = score; // Usar el nombre almacenado
+  localStorage.setItem("highScores", JSON.stringify(highScores));
+  renderHighScores();
 }
 
 function renderHighScores() {
-  highScoresTable.innerHTML = ""; // Limpiar la tabla
-  const sortedScores = Object.entries(highScores).sort(([, a], [, b]) => b - a); // Ordenar por puntaje
+  highScoresTable.innerHTML = "";
+  const sortedScores = Object.entries(highScores).sort(([, a], [, b]) => b - a);
   sortedScores.forEach(([name, score]) => {
     const row = highScoresTable.insertRow();
     const nameCell = row.insertCell();
@@ -123,9 +168,22 @@ function resetGame() {
   localStorage.clear();
   highScores = JSON.parse(localStorage.getItem("highScores")) || {};
   renderHighScores();
-  
-  enabledstartbutton(); // Habilitar el botón de inicio
+  enabledstartbutton();
 }
+
+function handlePlayerChange() {
+  playerName = prompt("Ingresa el nombre del nuevo jugador:");
+  if (playerName === null || playerName.trim() === "") {
+      playerName = "Jugador";
+  }
+
+  const gameOverMessage = document.getElementById("game-over-message");
+  gameOverMessage.style.display = "none";
+  gameOverMessage.removeChild(gameOverMessage.querySelector("button"));
+
+  startGame();
+}
+
 // Eventos
 startButton.addEventListener("click", startGame);
 restartButton.addEventListener("click", resetGame);
@@ -134,4 +192,11 @@ colorButtons.forEach((button) => {
 });
 
 // Inicialización
-renderHighScores(); // Mostrar los puntajes al cargar la página
+
+// Solicitar el nombre del jugador antes de iniciar el juego
+playerName = prompt("Ingresa tu nombre:");
+if (playerName === null || playerName.trim() === "") {
+    playerName = "Jugador"; // Nombre por defecto si no ingresa nada o cancela
+}
+
+renderHighScores();
