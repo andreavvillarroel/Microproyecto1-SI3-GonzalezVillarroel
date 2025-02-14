@@ -10,10 +10,10 @@ const startButton = document.getElementById("start-button");
 const restartButton = document.getElementById("restart-scores");
 const scoreDisplay = document.getElementById("score");
 const highScoresTable = document.querySelector("#high-scores table tbody");
-const redSound = new Audio("sound.mp3");
-const greenSound = new Audio("sound.mp3");
-const blueSound = new Audio("sound.mp3");
-const yellowSound = new Audio("sound.mp3");
+const redSound = new Audio("redsound.mp3");
+const greenSound = new Audio("greensound.mp3");
+const blueSound = new Audio("bluesound.mp3");
+const yellowSound = new Audio("yellowsound.mp3");
 let playerName; 
 
 // Funciones
