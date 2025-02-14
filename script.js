@@ -7,17 +7,38 @@ let highScores = JSON.parse(localStorage.getItem("highScores")) || {}; // Obtene
 
 const colorButtons = document.querySelectorAll(".color-button");
 const startButton = document.getElementById("start-button");
+const restartButton = document.getElementById("restart-scores");
 const scoreDisplay = document.getElementById("score");
 const highScoresTable = document.querySelector("#high-scores table tbody");
 
 // Funciones
 
+function disabledstartbutton() {
+  startButton.disabled = true; // Deshabilitar el botón de inicio durante el juego
+  startButton.style.backgroundColor = "red";
+  for (const color of colors) {
+    const colorButton = document.getElementById(color);
+    colorButton.style.display = "block";
+  }
+}
+
+function enabledstartbutton() {
+  startButton.disabled = false; // Deshabilitar el botón de inicio durante el juego
+  startButton.style.backgroundColor = "#23c429";
+  for (const color of colors) {
+    const colorButton = document.getElementById(color);
+    colorButton.style.display = "none";
+  }
+}
+
 function startGame() {
+  const gameOverMessage = document.getElementById("game-over-message");
+    gameOverMessage.style.display = "none";
   sequence = [];
   playerSequence = [];
   score = 0;
   scoreDisplay.textContent = "Puntuación: " + score;
-  startButton.disabled = true; // Deshabilitar el botón de inicio durante el juego
+  disabledstartbutton(); // Deshabilitar el botón de inicio durante el juego
   generateSequence();
   showSequence();
 }
@@ -67,15 +88,13 @@ function handlePlayerInput(event) {
 }
 
 function endGame() {
+    const gameOverMessage = document.getElementById("game-over-message");
     gameOverMessage.style.display = "block"; // Mostrar el mensaje de Game Over
     gameOverMessage.querySelector("#final-score").textContent = score; // Mostrar el puntaje final
-    setTimeout(() => {
-      gameOverMessage.style.display = "none";
-      updateHighScores(); // Llamar a updateHighScores después de que se oculta el mensaje
-      startGame(); // Reiniciar el juego automáticamente
-    }, 3000); // Ocultar el mensaje después de 3 segundos y reiniciar el juego
+    gameOverMessage.style.display = "none";
+    updateHighScores(); // Llamar a updateHighScores después de que se oculta el mensaje
 
-    startButton.disabled = false; // Habilitar el botón de inicio
+    enabledstartbutton(); // Habilitar el botón de inicio
   
 }
 
@@ -100,8 +119,16 @@ function renderHighScores() {
   });
 }
 
+function resetGame() {
+  localStorage.clear();
+  highScores = JSON.parse(localStorage.getItem("highScores")) || {};
+  renderHighScores();
+  
+  enabledstartbutton(); // Habilitar el botón de inicio
+}
 // Eventos
 startButton.addEventListener("click", startGame);
+restartButton.addEventListener("click", resetGame);
 colorButtons.forEach((button) => {
   button.addEventListener("click", handlePlayerInput);
 });
